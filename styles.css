@@ -22,6 +22,7 @@ header,
 .verification-methods,
 .verification-methods-text,
 .verification-methods-input,
+.legal,
 footer {
     display: flex;
 }
@@ -118,15 +119,28 @@ form {
 form,
 .verification,
 .verification-methods-text,
-.verification-methods-input {
+.verification-methods-input,
+.legal {
     flex-direction: column;
 }
 
 h1 {
     font-size: 60px;
-    font-weight: 900;
     letter-spacing: -3px;
     text-shadow: 0px 5px 5px rgba(0, 0, 0, 0.1);
+}
+
+h1,
+input,
+input[type="text"]::placeholder,
+select,
+option,
+.verification-method,
+.verification-methods,
+.terms-and-conditions-text,
+.privacy-poicy-text,
+.data-text {
+    font-weight: 900;
 }
 
 h1,
@@ -139,7 +153,6 @@ input[type="text"]::placeholder,
 select,
 option {
     font-size: 16px;
-    font-weight: 900;
     text-shadow: 0px 2px 2px rgba(0, 0, 0, 0.2);
 }
 
@@ -161,7 +174,9 @@ option {
 }
 
 input[type="text"],
-select {
+select,
+.verification-method,
+.verification-methods {
     color: rgba(255, 225, 200, 1);
 }
 
@@ -190,13 +205,11 @@ select {
 .verification-methods,
 .verification-methods-text,
 .verification-methods-input {
-    gap: 8px;
+    gap: 12px;
 }
 
 .phone-number-message,
-.verification-method,
-.verification-methods,
-input[type="radio"] {
+.legal {
     color: rgba(99, 79, 61, 1);
 }
 
@@ -205,7 +218,7 @@ input[type="radio"] {
 .verification-methods {
     text-align: center;
     text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.4);
-    max-width: 266px;
+    max-width: 366px;
 }
 
 input[type="radio"] {
@@ -225,7 +238,7 @@ input[type="radio"] {
   
 input[type="radio"]::before {
     border-radius: 50%;
-    box-shadow: inset 16px 16px rgba(0, 0, 0, 1);
+    box-shadow: inset 16px 16px rgba(99, 79, 61, 1);
     content: "";
     height: 10.4px;
     transform: scale(0);
@@ -242,6 +255,27 @@ input[type="radio"]:focus {
     outline-offset: max(2px, 2.4px);
     outline-style: solid;
     outline-width: max(2px, 2.4px);
+}
+
+input[type="radio"],
+.terms-and-conditions-text,
+.privacy-poicy-text,
+.data-text {
+    cursor: pointer;
+}
+
+.legal {
+    gap: 8px;
+    max-width: 366px;
+    text-align: center;
+}
+
+.terms-and-conditions-text:hover,
+.privacy-poicy-text:hover,
+.data-text:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 4px;
 }
 
 footer {
