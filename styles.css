@@ -14,9 +14,14 @@ html,
 body,
 main,
 footer {
-  align-items: center;
-  display: flex;
-  justify-content: center;
+    display: flex;
+}
+
+html,
+body,
+footer {
+    align-items: center;
+    justify-content: center;
 }
 
 html,
@@ -55,6 +60,28 @@ body {
     font-family: "SF-Pro-Text-Regular", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
+main {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    height: 100%;
+}
+  
+.image-container {
+    width: 40%;
+    height: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    overflow: hidden;
+}
+  
+.image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
 footer {
     bottom: 0;
     left: 0;
@@ -72,3 +99,4 @@ footer {
     padding-top: 0px;
     width: 32px;
 }
+   
