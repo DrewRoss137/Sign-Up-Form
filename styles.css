@@ -7,25 +7,41 @@
 }
 
 html {
+    overflow: hidden;
     scroll-behavior: smooth;
 }
 
 html,
 body,
 main,
+.image-container,
+form,
+header,
 footer {
     display: flex;
 }
 
 html,
 body,
+header,
+form,
 footer {
     align-items: center;
+
+}
+
+html,
+body,
+.image-container,
+header,
+form,
+footer {
     justify-content: center;
 }
 
 html,
 body,
+h1,
 main {
     margin: 0;
 }
@@ -61,19 +77,15 @@ body {
 }
 
 main {
-    display: flex;
     align-items: flex-start;
     justify-content: flex-start;
     height: 100%;
 }
   
-.image-container {
-    width: 40%;
+.image-background {
     height: 100%;
-    display: flex;
     justify-content: flex-start;
-    align-items: center;
-    overflow: hidden;
+    width: 40%;
 }
   
 .image {
@@ -82,13 +94,25 @@ main {
     object-fit: cover;
 }
 
-.container {
+.colour-background {
     background-image: url("background.svg");
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
     height: 100%;
     width: 60%;
+}
+
+form {
+    flex-direction: column;
+}
+
+h1 {
+    color: rgba(170, 143, 115, 1);
+    font-size: 60px;
+    font-weight: 900;
+    letter-spacing: -3px;
+    text-shadow: 0px 5px 5px rgba(0, 0, 0, 0.1);
 }
 
 footer {
@@ -102,10 +126,17 @@ footer {
 #github-logo {
     filter: invert(0%);
     height: 33px;
+    opacity: 7%;
     padding-bottom: 8px;
     padding-left: 0px;
     padding-right: 8px;
     padding-top: 0px;
     width: 32px;
 }
-   
+
+colours {
+    color: #917760;
+    color: #aa8f73;
+    color: #8b6544;
+    color: #5b381f;
+}
