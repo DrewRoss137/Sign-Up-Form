@@ -1,9 +1,9 @@
 @font-face {
     font-family: "SF Pro Text";
     src: url("SFProText-Regular.woff2") format("woff2");
-    font-weight: normal;
-    font-style: normal;
     font-display: swap;
+    font-style: normal;
+    font-weight: normal;
 }
 
 html {
@@ -16,6 +16,7 @@ body,
 main,
 .image-container,
 form,
+.names,
 header,
 footer {
     display: flex;
@@ -23,26 +24,25 @@ footer {
 
 html,
 body,
-header,
 form,
+header,
 footer {
     align-items: center;
-
 }
 
 html,
 body,
 .image-container,
-header,
 form,
+header,
 footer {
     justify-content: center;
 }
 
 html,
 body,
-h1,
-main {
+main,
+h1 {
     margin: 0;
 }
 
@@ -54,13 +54,18 @@ main {
 
 html,
 body,
-main {
+main,
+.image-background,
+.image,
+.colour-background {
     height: 100%;
 }
 
 html,
 body,
-main {
+main,
+.image,
+footer {
     width: 100%;
 }
 
@@ -73,25 +78,22 @@ body {
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
+}
+
+body,
+select,
+input {
     font-family: "SF-Pro-Text-Regular", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 main {
     align-items: flex-start;
     justify-content: flex-start;
-    height: 100%;
 }
   
 .image-background {
-    height: 100%;
     justify-content: flex-start;
     width: 40%;
-}
-  
-.image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
 }
 
 .colour-background {
@@ -99,20 +101,76 @@ main {
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
-    height: 100%;
     width: 60%;
 }
 
 form {
     flex-direction: column;
+    gap: 16px;
 }
 
 h1 {
-    color: rgba(170, 143, 115, 1);
     font-size: 60px;
     font-weight: 900;
     letter-spacing: -3px;
     text-shadow: 0px 5px 5px rgba(0, 0, 0, 0.1);
+}
+
+h1,
+input::placeholder {
+    color: rgba(207, 184, 160, 1);
+}
+
+input,
+input::placeholder,
+select,
+option {
+    font-size: 16px;
+    font-weight: 900;
+    text-shadow: 0px 2px 2px rgba(0, 0, 0, 0.2);
+}
+
+input,
+select,
+option {
+    background-color: transparent;
+    border-bottom-color: rgba(207, 184, 160, 1);
+    border-bottom-width: 2px;
+    border-left: none;
+    border-radius: 3px;
+    border-right: none;
+    border-top: none;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+    outline: none;
+    padding: 8px;
+    transition: all 0.5s ease-in-out;
+    width: 250px;
+}
+
+input,
+select {
+    color: rgba(255, 225, 200, 1);
+}
+
+input:hover,
+select:hover {
+    border-bottom: 2px solid rgb(231, 205, 177);
+    transform: scale(1.025);
+}
+
+input:focus,
+select:focus  {
+    border-bottom: 2px solid rgba(255, 225, 200, 1);
+    transform: scale(1.05);
+}
+
+select {
+    height: 40px;
+    width: 266px;
+}
+
+.names {
+    gap: 16px;
 }
 
 footer {
@@ -120,7 +178,6 @@ footer {
     left: 0;
     position: fixed;
     justify-content: flex-end;
-    width: 100%;
 }
   
 #github-logo {
