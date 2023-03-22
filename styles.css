@@ -82,6 +82,15 @@ main {
     object-fit: cover;
 }
 
+.container {
+    background-image: url("background.svg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100%;
+    width: 60%;
+}
+
 footer {
     bottom: 0;
     left: 0;
