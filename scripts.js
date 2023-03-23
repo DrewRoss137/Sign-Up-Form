@@ -42,11 +42,11 @@ const getFormattedInput = (inputValue) => {
 };
 
 dateOfBirthInput.addEventListener("blur", () => {
-    if (dateOfBirthInput.value === dateFormat) {
-      dateOfBirthInput.value = "";
-      isFirstClick = true;
-    }
-  });
+  if (dateOfBirthInput.value === dateFormat) {
+    dateOfBirthInput.value = "";
+    isFirstClick = true;
+  }
+});
 
 dateOfBirthInput.addEventListener("click", () => {
   if (
