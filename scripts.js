@@ -12,7 +12,7 @@ const passwordInput = document.getElementById("password-input");
 
 const confirmPasswordInput = document.getElementById("confirm-password-input");
 
-const dateOfBirthInput = document.getElementById("date-of-birth-input");
+const dateOfBirthInput = document.getElementById('date-of-birth-input');
 const dateFormat = 'DD/MM/YYYY';
 let firstClick = true;
 
@@ -24,25 +24,29 @@ function findLastEnteredInputPosition(inputValue) {
   return position + 1;
 }
 
+function getFormattedInput(inputValue) {
+  const inputDigits = inputValue.replace(/\D/g, '');
+  let formattedInput = '';
+  for (let i = 0, j = 0; i < dateFormat.length; i++) {
+    if ('DMY'.includes(dateFormat[i])) {
+      formattedInput += j < inputDigits.length ? inputDigits[j++] : dateFormat[i];
+    } else {
+      formattedInput += dateFormat[i];
+    }
+  }
+  return formattedInput;
+}
+
 dateOfBirthInput.addEventListener('click', () => {
   if (firstClick && (dateOfBirthInput.value === '' || dateOfBirthInput.value === dateFormat)) {
     dateOfBirthInput.value = dateFormat;
     dateOfBirthInput.setSelectionRange(0, 0);
     firstClick = false;
   } else {
-    setTimeout(() => {
-      let cursorPosition = dateOfBirthInput.value.indexOf('D');
-      if (cursorPosition === -1) {
-        cursorPosition = dateOfBirthInput.value.indexOf('M');
-      }
-      if (cursorPosition === -1) {
-        cursorPosition = dateOfBirthInput.value.indexOf('Y');
-      }
-      if (cursorPosition === -1) {
-        cursorPosition = dateOfBirthInput.value.length;
-      }
-      dateOfBirthInput.setSelectionRange(cursorPosition, cursorPosition);
-    }, 0);
+    const cursorPosition = ['D', 'M', 'Y'].reduce((pos, letter) => {
+      return pos !== -1 ? pos : dateOfBirthInput.value.indexOf(letter);
+    }, -1);
+    dateOfBirthInput.setSelectionRange(cursorPosition, cursorPosition);
   }
 });
 
@@ -53,32 +57,39 @@ dateOfBirthInput.addEventListener('blur', () => {
   }
 });
 
-dateOfBirthInput.addEventListener('input', () => {
-  const inputDigits = dateOfBirthInput.value.replace(/\D/g, '');
-  let formattedInput = '';
-  for (let i = 0, j = 0; i < dateFormat.length; i++) {
-    if ('DMY'.includes(dateFormat[i])) {
-      formattedInput += j < inputDigits.length ? inputDigits[j++] : dateFormat[i];
-    } else {
-      formattedInput += dateFormat[i];
-    }
-  }
+dateOfBirthInput.addEventListener('input', (event) => {
+  const formattedInput = getFormattedInput(event.target.value);
   dateOfBirthInput.value = formattedInput;
-  const nextPosition = dateOfBirthInput.value.search(/D|M|Y/);
+  const nextPosition = formattedInput.search(/D|M|Y/);
   dateOfBirthInput.setSelectionRange(nextPosition, nextPosition);
 });
 
 dateOfBirthInput.addEventListener('keydown', (event) => {
-  if (event.key === 'Backspace' || event.key === 'Delete') {
+  if (event.ctrlKey && event.key === 'a') {
+    event.preventDefault();
+    dateOfBirthInput.setSelectionRange(0, dateOfBirthInput.value.length);
+  } else if (event.key === 'Backspace' || event.key === 'Delete') {
     event.preventDefault();
     const currentValue = dateOfBirthInput.value;
-    let position = dateOfBirthInput.selectionStart;
-    if (position > 0) {
-      if (currentValue[position - 1] === '/') {
-        position--;
+    const selectionStart = dateOfBirthInput.selectionStart;
+    const selectionEnd = dateOfBirthInput.selectionEnd;
+    if (selectionStart === selectionEnd) {
+      let position = selectionStart;
+      if (event.key === 'Backspace' && position > 0) {
+        position -= 1;
+      } else if (event.key === 'Delete' && position < currentValue.length) {
+        position += 1;
       }
-      dateOfBirthInput.value = currentValue.slice(0, position - 1) + dateFormat[position - 1] + currentValue.slice(position);
-      dateOfBirthInput.setSelectionRange(position - 1, position - 1);
+      if (currentValue[position] === '/') {
+        position += event.key === 'Backspace' ? -1 : 1;
+      }
+      dateOfBirthInput.value = currentValue.slice(0, position) + dateFormat[position] + currentValue.slice(position + 1);
+      dateOfBirthInput.setSelectionRange(position, position);
+    } else {
+      const firstHalf = currentValue.slice(0, selectionStart);
+      const secondHalf = currentValue.slice(selectionEnd);
+      dateOfBirthInput.value = firstHalf + dateFormat.substring(firstHalf.length, selectionEnd) + secondHalf;
+      dateOfBirthInput.setSelectionRange(selectionStart, selectionStart);
     }
   }
 });
