@@ -5,7 +5,9 @@ const dateOfBirthInput = document.getElementById("date-of-birth-input");
 const emailAddressInput = document.getElementById("email-address-input");
 const phoneNumberInput = document.getElementById("phone-number-input");
 const passwordInput = document.getElementById("password-input");
+const togglePasswordButton = document.getElementById("toggle-password");
 const confirmPasswordInput = document.getElementById("confirm-password-input");
+const toggleConfirmPasswordButton = document.getElementById("toggle-confirm-password");
 const textInputs = document.querySelectorAll("input[type='text']");
 
 const dateOfBirthFormat = "DD/MM/YYYY";
@@ -90,6 +92,14 @@ dateOfBirthInput.addEventListener("keydown", (event) => {
   }
 });
 
+togglePasswordButton.addEventListener("click", () => {
+  togglePasswordVisibility(passwordInput);
+});
+
+toggleConfirmPasswordButton.addEventListener("click", () => {
+  togglePasswordVisibility(confirmPasswordInput);
+});
+
 /* Finds the position of the last entered input value that is not "D", "M", or "Y". */
 const findLastEnteredInputPosition = (inputValue) => {
   let position = inputValue.length - 1;
@@ -112,4 +122,12 @@ const getFormattedInput = (inputValue) => {
     }
   }
   return formattedDateOfBirthInput;
+};
+
+const togglePasswordVisibility = (inputElement) => {
+  if (inputElement.type === "password") {
+      inputElement.type = "text";
+  } else {
+      inputElement.type = "password";
+  }
 };
