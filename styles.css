@@ -7,7 +7,7 @@ html,
 body,
 main,
 .image-container,
-.form,
+form,
 .names,
 header,
 .verification,
@@ -22,7 +22,7 @@ footer {
 
 html,
 body,
-.form,
+form,
 header,
 .verification-methods,
 .continue-and-login,
@@ -33,7 +33,7 @@ footer {
 html,
 body,
 .image-container,
-.form,
+form,
 header,
 .verification-methods,
 .continue-and-login,
@@ -108,13 +108,13 @@ main {
   width: 60%;
 }
 
-.form,
+form,
 .legal,
 .continue-and-login {
   gap: 8px;
 }
 
-.form,
+form,
 .verification,
 .verification-methods-text,
 .verification-methods-input,
@@ -137,6 +137,7 @@ select,
 option,
 .verification-method,
 .verification-methods,
+input[type="password"],
 .terms-and-conditions-text,
 .data-rates-text,
 .privacy-poicy-text,
@@ -147,7 +148,8 @@ option,
 }
 
 h1,
-input[type="text"]::placeholder {
+input[type="text"]::placeholder,
+input[type="password"]::placeholder {
   color: rgba(207, 184, 160, 1);
 }
 
@@ -155,6 +157,7 @@ input,
 input[type="text"]::placeholder,
 select,
 option,
+input[type="password"],
 .login {
   font-size: 16px;
   text-shadow: 0px 2px 2px rgba(0, 0, 0, 0.2);
@@ -165,6 +168,7 @@ select,
 option,
 .verification-method,
 .verification-methods,
+input[type="password"],
 .terms-and-conditions-text,
 .privacy-poicy-text,
 .data-text,
@@ -174,12 +178,14 @@ option,
 
 input[type="text"],
 select,
+input[type="password"],
 button {
   transition: all 0.5s ease-in-out;
 }
 
 input[type="text"],
-select {
+select,
+input[type="password"] {
   background-color: transparent;
   border-bottom-color: rgba(207, 184, 160, 1);
   border-bottom-width: 2px;
@@ -195,14 +201,16 @@ select {
 
 input[type="text"]:hover,
 select:hover,
-button:hover {
+button:hover,
+input[type="password"]:hover {
   border-bottom: 2px solid rgb(231, 205, 177);
   transform: scale(1.025);
 }
 
 input[type="text"]:focus,
 select:focus,
-button:focus {
+button:focus,
+input[type="password"]:focus {
   border-bottom: 2px solid rgba(255, 225, 200, 1);
   transform: scale(1.05);
 }
