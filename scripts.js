@@ -16,6 +16,8 @@ const confirmPasswordInput = document.getElementById("confirm-password-input");
 
 const dateFormat = "DD/MM/YYYY";
 
+const textInputs = document.querySelectorAll('input[type="text"]');
+
 let isFirstClick = true;
 let formattedInput;
 
@@ -108,4 +110,26 @@ dateOfBirthInput.addEventListener("keydown", (event) => {
   } else if (event.key.startsWith("Arrow")) {
     event.preventDefault();
   }
+});
+
+textInputs.forEach(input => {
+  let firstFocus = true;
+  input.addEventListener('focus', () => {
+      if (input.style.borderColor !== 'green' && firstFocus) {
+          input.style.borderColor = 'blue';
+          firstFocus = false;
+      }
+  });
+  input.addEventListener('blur', () => {
+      if (input.value.trim() === '') {
+          input.style.borderColor = 'red';
+      }
+  });
+  input.addEventListener('input', () => {
+      if (input.value.trim() !== '') {
+          input.style.borderColor = 'green';
+      } else {
+          input.style.borderColor = 'red';
+      }
+  });
 });
