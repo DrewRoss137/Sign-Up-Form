@@ -133,3 +133,95 @@ textInputs.forEach(input => {
       }
   });
 });
+
+
+function createErrorContainer() {
+  const errorContainer = document.createElement("div");
+  errorContainer.id = "error-container";
+  errorContainer.style.position = "absolute";
+  errorContainer.style.padding = "8px";
+  errorContainer.style.borderRadius = "3px";
+  errorContainer.style.backgroundColor = "rgba(255, 0, 0, 0.8)";
+  errorContainer.style.color = "white";
+  const inputRect = firstNameInput.getBoundingClientRect();
+  const inputCenterX = inputRect.left + inputRect.width / 2;
+  const inputCenterY = inputRect.top + inputRect.height / 2;
+  errorContainer.style.left = `${inputCenterX - errorContainer.offsetWidth - 500}px`;
+  errorContainer.style.top = `${inputCenterY - errorContainer.offsetHeight / 2}px`;
+  errorContainer.style.display = "flex";
+  errorContainer.style.alignItems = "center";
+  errorContainer.style.justifyContent = "center";
+  firstNameInput.parentNode.insertBefore(errorContainer, firstNameInput);
+  return errorContainer;
+}
+
+function fadeIn(element) {
+  element.style.opacity = 0;
+  element.style.display = "block";
+  const duration = 1000;
+  let start = null;
+  function step(timestamp) {
+    if (!start) {
+      start = timestamp;
+    }
+    const elapsed = timestamp - start;
+    const progress = elapsed / duration;
+    element.style.opacity = progress;
+    if (progress < 1) {
+      window.requestAnimationFrame(step);
+    }
+  }
+  window.requestAnimationFrame(step);
+}
+
+function fadeOut(element) {
+  const duration = 1000;
+  let start = null;
+
+  function step(timestamp) {
+    if (!start) {
+      start = timestamp;
+    }
+    const elapsed = timestamp - start;
+    const progress = elapsed / duration;
+    element.style.opacity = 1 - progress;
+    if (progress < 1) {
+      window.requestAnimationFrame(step);
+    } else {
+      element.style.display = "none";
+    }
+  }
+  window.requestAnimationFrame(step);
+}
+
+const errorContainer = createErrorContainer();
+function validateFirstName() {
+  errorContainer.textContent = "";
+  const inputValue = firstNameInput.value.trim();
+  const errors = [];
+  if (inputValue === "") {
+    errors.push("First Name cannot be empty");
+  }
+  if (/\d/.test(inputValue)) {
+    errors.push("First Name cannot contain digits");
+  }
+  if (/[^a-zA-Z\s]/.test(inputValue)) {
+    errors.push("First Name cannot contain special characters");
+  }
+  if (errors.length > 0) {
+    errors.forEach((error) => {
+      const errorMessage = document.createElement("p");
+      errorMessage.classList.add("error-message");
+      errorMessage.textContent = error;
+      errorContainer.appendChild(errorMessage);
+    });
+    fadeIn(errorContainer);
+    errorContainer.style.top = `${firstNameInput.offsetTop}px`;
+    setTimeout(() => {
+      fadeOut(errorContainer);
+    }, 4000);
+  } else {
+    fadeOut(errorContainer);
+  }
+}
+firstNameInput.addEventListener("focusout", validateFirstName);
