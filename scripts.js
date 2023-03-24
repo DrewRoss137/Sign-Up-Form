@@ -1,61 +1,35 @@
 const firstNameInput = document.getElementById("first-name-input");
-
-const LastNameInput = document.getElementById("first-name-input");
-
+const lastNameInput = document.getElementById("last-name-input");
 const userNameInput = document.getElementById("user-name-input");
-
 const dateOfBirthInput = document.getElementById("date-of-birth-input");
-
 const emailAddressInput = document.getElementById("email-address-input");
-
 const phoneNumberInput = document.getElementById("phone-number-input");
-
 const passwordInput = document.getElementById("password-input");
-
 const confirmPasswordInput = document.getElementById("confirm-password-input");
+const textInputs = document.querySelectorAll("input[type='text']");
 
-const dateFormat = "DD/MM/YYYY";
+const dateOfBirthFormat = "DD/MM/YYYY";
 
-const textInputs = document.querySelectorAll('input[type="text"]');
-
+let formattedDateOfBirthInput;
 let isFirstClick = true;
-let formattedInput;
 
-const findLastEnteredInputPosition = (inputValue) => {
-  let position = inputValue.length - 1;
-  while (position >= 0 && "DMY".includes(inputValue[position])) {
-    position--;
-  }
-  return position + 1;
-};
-
-const getFormattedInput = (inputValue) => {
-  const inputDigits = inputValue.replace(/\D/g, "");
-  formattedInput = "";
-  for (let i = 0, j = 0; i < dateFormat.length; i++) {
-    if ("DMY".includes(dateFormat[i])) {
-      formattedInput +=
-        j < inputDigits.length ? inputDigits[j++] : dateFormat[i];
-    } else {
-      formattedInput += dateFormat[i];
-    }
-  }
-  return formattedInput;
-};
-
+/* If the user's input === "DD/MM/YYY", the isFirstClick flag is reset. */
 dateOfBirthInput.addEventListener("blur", () => {
-  if (dateOfBirthInput.value === dateFormat) {
+  if (dateOfBirthInput.value === dateOfBirthFormat) {
     dateOfBirthInput.value = "";
     isFirstClick = true;
   }
 });
 
+/* If isFirstClick, and the user's input === "DD/MM/YYY", cursor is placed at the beginning.
+If !isFirstClick, positions the cursor after the last entered character, or before the first placeholder. */
 dateOfBirthInput.addEventListener("click", () => {
   if (
     isFirstClick &&
-    (dateOfBirthInput.value === "" || dateOfBirthInput.value === dateFormat)
+    (dateOfBirthInput.value === "" ||
+      dateOfBirthInput.value === dateOfBirthFormat)
   ) {
-    dateOfBirthInput.value = dateFormat;
+    dateOfBirthInput.value = dateOfBirthFormat;
     dateOfBirthInput.setSelectionRange(0, 0);
     isFirstClick = false;
   } else {
@@ -68,13 +42,17 @@ dateOfBirthInput.addEventListener("click", () => {
   }
 });
 
+/* Formats user's input using getFormattedInput function and sets the input value to the formatted value.
+Positions the cursor after the last entered character, or before the first placeholder. */
 dateOfBirthInput.addEventListener("input", ({ target: { value } }) => {
-  const formattedInput = getFormattedInput(value);
-  dateOfBirthInput.value = formattedInput;
-  const nextPosition = formattedInput.search(/D|M|Y/);
+  const formattedDateOfBirthInput = getFormattedInput(value);
+  dateOfBirthInput.value = formattedDateOfBirthInput;
+  const nextPosition = formattedDateOfBirthInput.search(/D|M|Y/);
   dateOfBirthInput.setSelectionRange(nextPosition, nextPosition);
 });
 
+/* "Ctrl + A", "Backspace" and "Delete" modifies the input value accordingly while preserving the date format and positions the cursor correctly.
+If the user presses any arrow key, it prevents the default behavior, avoiding unwanted cursor movement. */
 dateOfBirthInput.addEventListener("keydown", (event) => {
   if (event.ctrlKey && event.key === "a") {
     event.preventDefault();
@@ -95,13 +73,13 @@ dateOfBirthInput.addEventListener("keydown", (event) => {
         position += event.key === "Backspace" ? -1 : 1;
       }
       dateOfBirthInput.value = `${currentValue.slice(0, position)}${
-        dateFormat[position]
+        dateOfBirthFormat[position]
       }${currentValue.slice(position + 1)}`;
       dateOfBirthInput.setSelectionRange(position, position);
     } else {
       const firstHalf = currentValue.slice(0, selectionStart);
       const secondHalf = currentValue.slice(selectionEnd);
-      dateOfBirthInput.value = `${firstHalf}${dateFormat.substring(
+      dateOfBirthInput.value = `${firstHalf}${dateOfBirthFormat.substring(
         firstHalf.length,
         selectionEnd
       )}${secondHalf}`;
@@ -112,116 +90,26 @@ dateOfBirthInput.addEventListener("keydown", (event) => {
   }
 });
 
-textInputs.forEach(input => {
-  let firstFocus = true;
-  input.addEventListener('focus', () => {
-      if (input.style.borderColor !== 'green' && firstFocus) {
-          input.style.borderColor = 'blue';
-          firstFocus = false;
-      }
-  });
-  input.addEventListener('blur', () => {
-      if (input.value.trim() === '') {
-          input.style.borderColor = 'red';
-      }
-  });
-  input.addEventListener('input', () => {
-      if (input.value.trim() !== '') {
-          input.style.borderColor = 'green';
-      } else {
-          input.style.borderColor = 'red';
-      }
-  });
-});
-
-
-function createErrorContainer() {
-  const errorContainer = document.createElement("div");
-  errorContainer.id = "error-container";
-  errorContainer.style.position = "absolute";
-  errorContainer.style.padding = "8px";
-  errorContainer.style.borderRadius = "3px";
-  errorContainer.style.backgroundColor = "rgba(255, 0, 0, 0.8)";
-  errorContainer.style.color = "white";
-  const inputRect = firstNameInput.getBoundingClientRect();
-  const inputCenterX = inputRect.left + inputRect.width / 2;
-  const inputCenterY = inputRect.top + inputRect.height / 2;
-  errorContainer.style.left = `${inputCenterX - errorContainer.offsetWidth - 500}px`;
-  errorContainer.style.top = `${inputCenterY - errorContainer.offsetHeight / 2}px`;
-  errorContainer.style.display = "flex";
-  errorContainer.style.alignItems = "center";
-  errorContainer.style.justifyContent = "center";
-  firstNameInput.parentNode.insertBefore(errorContainer, firstNameInput);
-  return errorContainer;
-}
-
-function fadeIn(element) {
-  element.style.opacity = 0;
-  element.style.display = "block";
-  const duration = 1000;
-  let start = null;
-  function step(timestamp) {
-    if (!start) {
-      start = timestamp;
-    }
-    const elapsed = timestamp - start;
-    const progress = elapsed / duration;
-    element.style.opacity = progress;
-    if (progress < 1) {
-      window.requestAnimationFrame(step);
-    }
+/* Finds the position of the last entered input value that is not "D", "M", or "Y". */
+const findLastEnteredInputPosition = (inputValue) => {
+  let position = inputValue.length - 1;
+  while (position >= 0 && "DMY".includes(inputValue[position])) {
+    position--;
   }
-  window.requestAnimationFrame(step);
-}
+  return position + 1;
+};
 
-function fadeOut(element) {
-  const duration = 1000;
-  let start = null;
-
-  function step(timestamp) {
-    if (!start) {
-      start = timestamp;
-    }
-    const elapsed = timestamp - start;
-    const progress = elapsed / duration;
-    element.style.opacity = 1 - progress;
-    if (progress < 1) {
-      window.requestAnimationFrame(step);
+/* Extracts digits from the user's input, and formats them according to, and within, "DD/MM/YYYY". */
+const getFormattedInput = (inputValue) => {
+  const inputDigits = inputValue.replace(/\D/g, "");
+  formattedDateOfBirthInput = "";
+  for (let i = 0, j = 0; i < dateOfBirthFormat.length; i++) {
+    if ("DMY".includes(dateOfBirthFormat[i])) {
+      formattedDateOfBirthInput +=
+        j < inputDigits.length ? inputDigits[j++] : dateOfBirthFormat[i];
     } else {
-      element.style.display = "none";
+      formattedDateOfBirthInput += dateOfBirthFormat[i];
     }
   }
-  window.requestAnimationFrame(step);
-}
-
-const errorContainer = createErrorContainer();
-function validateFirstName() {
-  errorContainer.textContent = "";
-  const inputValue = firstNameInput.value.trim();
-  const errors = [];
-  if (inputValue === "") {
-    errors.push("First Name cannot be empty");
-  }
-  if (/\d/.test(inputValue)) {
-    errors.push("First Name cannot contain digits");
-  }
-  if (/[^a-zA-Z\s]/.test(inputValue)) {
-    errors.push("First Name cannot contain special characters");
-  }
-  if (errors.length > 0) {
-    errors.forEach((error) => {
-      const errorMessage = document.createElement("p");
-      errorMessage.classList.add("error-message");
-      errorMessage.textContent = error;
-      errorContainer.appendChild(errorMessage);
-    });
-    fadeIn(errorContainer);
-    errorContainer.style.top = `${firstNameInput.offsetTop}px`;
-    setTimeout(() => {
-      fadeOut(errorContainer);
-    }, 4000);
-  } else {
-    fadeOut(errorContainer);
-  }
-}
-firstNameInput.addEventListener("focusout", validateFirstName);
+  return formattedDateOfBirthInput;
+};
