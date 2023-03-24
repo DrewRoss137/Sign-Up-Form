@@ -7,7 +7,9 @@ const phoneNumberInput = document.getElementById("phone-number-input");
 const passwordInput = document.getElementById("password-input");
 const togglePasswordButton = document.getElementById("toggle-password");
 const confirmPasswordInput = document.getElementById("confirm-password-input");
-const toggleConfirmPasswordButton = document.getElementById("toggle-confirm-password");
+const toggleConfirmPasswordButton = document.getElementById(
+  "toggle-confirm-password"
+);
 const textInputs = document.querySelectorAll("input[type='text']");
 
 const dateOfBirthFormat = "DD/MM/YYYY";
@@ -126,8 +128,8 @@ const getFormattedInput = (inputValue) => {
 
 const togglePasswordVisibility = (inputElement) => {
   if (inputElement.type === "password") {
-      inputElement.type = "text";
+    inputElement.type = "text";
   } else {
-      inputElement.type = "password";
+    inputElement.type = "password";
   }
 };
