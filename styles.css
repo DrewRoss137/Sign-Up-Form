@@ -10,12 +10,12 @@ main,
 form,
 .names,
 header,
-.password,
-.confirm-password,
 .verification,
 .verification-methods,
 .verification-methods-text,
 .verification-methods-input,
+.password,
+.confirm-password,
 .legal,
 .continue-and-login,
 footer {
@@ -27,6 +27,8 @@ body,
 form,
 header,
 .verification-methods,
+.password,
+.confirm-password,
 .continue-and-login,
 footer {
   align-items: center;
@@ -146,7 +148,7 @@ input[type="password"],
 .privacy-poicy-text,
 .data-text,
 .continue,
-.login-text {
+.login {
   font-weight: 900;
 }
 
@@ -223,9 +225,7 @@ select {
   width: 266px;
 }
 
-.names,
-.password,
-.confirm-password {
+.names {
   gap: 16px;
 }
 
@@ -250,7 +250,8 @@ button,
 }
 
 .verification,
-.legal {
+.legal,
+.login {
   text-align: center;
   text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.3);
   max-width: 366px;
@@ -306,6 +307,25 @@ button[type="button"] {
   background-color: transparent;
   border: none;
   outline: none;
+}
+
+.password,
+.confirm-password {
+  position: relative;
+}
+
+.password-input,
+.confirm-password-input {
+  flex: 1;
+}
+
+.toggle-password,
+.toggle-confirm-password {
+  left: calc(100% + 10px);
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .terms-and-conditions-text:hover,
