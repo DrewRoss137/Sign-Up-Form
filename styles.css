@@ -7,7 +7,7 @@ html,
 body,
 main,
 .image-container,
-form,
+.form,
 .names,
 header,
 .verification,
@@ -22,7 +22,7 @@ footer {
 
 html,
 body,
-form,
+.form,
 header,
 .verification-methods,
 .continue-and-login,
@@ -33,7 +33,7 @@ footer {
 html,
 body,
 .image-container,
-form,
+.form,
 header,
 .verification-methods,
 .continue-and-login,
@@ -108,13 +108,13 @@ main {
   width: 60%;
 }
 
-form,
+.form,
 .legal,
 .continue-and-login {
   gap: 8px;
 }
 
-form,
+.form,
 .verification,
 .verification-methods-text,
 .verification-methods-input,
@@ -336,4 +336,33 @@ colours {
   color: #aa8f73;
   color: #8b6544;
   color: #5b381f;
+}
+
+.error-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+#error-container {
+  position: absolute;
+  opacity: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 8px;
+  border-radius: 3px;
+  background: red;
+  color: white;
+}
+
+.error-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  height: 100%;
+  margin: 0;
 }
