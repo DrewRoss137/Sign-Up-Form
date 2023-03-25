@@ -185,7 +185,15 @@ input[type="text"],
 select,
 input[type="password"],
 button[type="submit"] {
-  transition: all 0.5s ease-in-out;
+  transition: border-color 0.75s ease, all 0.75s ease-in-out;
+}
+
+input[type="text"].invalid {
+  border-bottom-color: rgba(255, 0, 0, 1);
+}
+
+input[type="text"].valid {
+  border-bottom-color: rgba(0, 255, 0, 1);
 }
 
 input[type="text"],
@@ -208,7 +216,6 @@ input[type="text"]:hover,
 select:hover,
 button[type="submit"]:hover,
 input[type="password"]:hover {
-  border-bottom: 2px solid rgb(231, 205, 177);
   transform: scale(1.025);
 }
 
@@ -216,7 +223,7 @@ input[type="text"]:focus,
 select:focus,
 button[type="submit"]:focus,
 input[type="password"]:focus {
-  border-bottom: 2px solid rgba(255, 225, 200, 1);
+  border-bottom-color: rgba(0, 0, 255, 1);
   transform: scale(1.05);
 }
 
