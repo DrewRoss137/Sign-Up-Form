@@ -1,3 +1,4 @@
+const textInputs = document.querySelectorAll("input[type='text']");
 const firstNameInput = document.getElementById("first-name-input");
 const lastNameInput = document.getElementById("last-name-input");
 const userNameInput = document.getElementById("user-name-input");
@@ -10,12 +11,15 @@ const confirmPasswordInput = document.getElementById("confirm-password-input");
 const toggleConfirmPasswordButton = document.getElementById(
   "toggle-confirm-password"
 );
-const textInputs = document.querySelectorAll("input[type='text']");
 
 const dateOfBirthFormat = "DD/MM/YYYY";
 
 let formattedDateOfBirthInput;
 let isFirstClick = true;
+
+textInputs.forEach((input) => {
+  input.addEventListener("blur", () => validateInput(input));
+});
 
 /* If the user's input === "DD/MM/YYY", the isFirstClick flag is reset. */
 dateOfBirthInput.addEventListener("blur", () => {
@@ -102,19 +106,19 @@ toggleConfirmPasswordButton.addEventListener("click", () => {
   togglePasswordVisibility(confirmPasswordInput);
 });
 
-/* Finds the position of the last entered input value that is not "D", "M", or "Y". */
-const findLastEnteredInputPosition = (inputValue) => {
+// Finds the position of the last entered input value that is not "D", "M", or "Y".
+function findLastEnteredInputPosition(inputValue) {
   let position = inputValue.length - 1;
   while (position >= 0 && "DMY".includes(inputValue[position])) {
     position--;
   }
   return position + 1;
-};
+}
 
-/* Extracts digits from the user's input, and formats them according to, and within, "DD/MM/YYYY". */
-const getFormattedInput = (inputValue) => {
+// Extracts only digits from the user's raw input, and formats them according to, and within, "DD/MM/YYYY".
+function getFormattedInput(inputValue) {
   const inputDigits = inputValue.replace(/\D/g, "");
-  formattedDateOfBirthInput = "";
+  let formattedDateOfBirthInput = "";
   for (let i = 0, j = 0; i < dateOfBirthFormat.length; i++) {
     if ("DMY".includes(dateOfBirthFormat[i])) {
       formattedDateOfBirthInput +=
@@ -124,12 +128,25 @@ const getFormattedInput = (inputValue) => {
     }
   }
   return formattedDateOfBirthInput;
+}
+
+const validationRules = {
+  "first-name-input": /^[^\s\d][^\d]*$/,
+  "last-name-input": /^[^\s\d][^\d]*$/,
+  "user-name-input": /^\w{3,}$/,
+  "date-of-birth-input": /^\d{4}-\d{2}-\d{2}$/,
+  "email-address-input": /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
+  "phone-number-input": /^(?:\(\d{3}\)|\d{3})[-\s]?\d{3}[-\s]?\d{4}$/,
+  "password-input":
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+  "confirm-password-input":
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
 };
 
-const togglePasswordVisibility = (inputElement) => {
-  if (inputElement.type === "password") {
-    inputElement.type = "text";
-  } else {
-    inputElement.type = "password";
-  }
-};
+function validateInput(input) {
+  const regex = validationRules[input.id];
+  if (!regex) return;
+  const isValid = regex.test(input.value);
+  input.classList.toggle("valid", isValid);
+  input.classList.toggle("invalid", !isValid);
+}
