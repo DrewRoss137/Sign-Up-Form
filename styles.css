@@ -185,7 +185,7 @@ input[type="text"],
 select,
 input[type="password"],
 button[type="submit"] {
-  transition: border-color 0.75s ease, all 0.75s ease-in-out;
+  transition: border-color 1s ease, all 1s ease-in-out;
 }
 
 input[type="text"].invalid {
@@ -223,7 +223,6 @@ input[type="text"]:focus,
 select:focus,
 button[type="submit"]:focus,
 input[type="password"]:focus {
-  border-bottom-color: rgba(0, 0, 255, 1);
   transform: scale(1.05);
 }
 
