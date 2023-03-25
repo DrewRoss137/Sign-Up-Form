@@ -131,22 +131,20 @@ function getFormattedInput(inputValue) {
 }
 
 const validationRules = {
-  "first-name-input": /^[^\s\d][^\d]*$/,
-  "last-name-input": /^[^\s\d][^\d]*$/,
-  "user-name-input": /^\w{3,}$/,
-  "date-of-birth-input": /^\d{4}-\d{2}-\d{2}$/,
-  "email-address-input": /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
-  "phone-number-input": /^(?:\(\d{3}\)|\d{3})[-\s]?\d{3}[-\s]?\d{4}$/,
-  "password-input":
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-  "confirm-password-input":
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+  "first-name-input": /^[^\s\d][a-zA-Z-]*$/,
+  "last-name-input": /^[^\s\d][a-zA-Z-]*$/,
+  "user-name-input": /^[a-zA-Z0-9-_]{3,30}$/,
+  // "date-of-birth-input": /^\d{2}-\d{2}-\d{4}$/,
+  // "email-address-input": /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
+  // "phone-number-input": /^(?:\(\d{3}\)|\d{3})[-\s]?\d{3}[-\s]?\d{4}$/,
+  // "password-input": /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+  // "confirm-password-input": /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
 };
 
 function validateInput(input) {
   const regex = validationRules[input.id];
   if (!regex) return;
   const isValid = regex.test(input.value);
-  input.classList.toggle("valid", isValid);
-  input.classList.toggle("invalid", !isValid);
+  input.classList.remove("valid", "invalid");
+  input.classList.add(isValid ? "valid" : "invalid");
 }
