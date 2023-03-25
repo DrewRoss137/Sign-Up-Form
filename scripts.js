@@ -14,11 +14,17 @@ const toggleConfirmPasswordButton = document.getElementById(
 
 const dateOfBirthFormat = "DD/MM/YYYY";
 
+const validationRules = {
+  "first-name-input": /^[^\s\d][a-zA-Z-]*$/,
+  "last-name-input": /^[^\s\d][a-zA-Z-]*$/,
+  "user-name-input": /^[a-zA-Z0-9-_]{3,30}$/,
+};
+
 let formattedDateOfBirthInput;
 let isFirstClick = true;
 
 textInputs.forEach((input) => {
-  input.addEventListener("blur", () => validateInput(input));
+  input.addEventListener("input", () => validateInput(input));
 });
 
 /* If the user's input === "DD/MM/YYY", the isFirstClick flag is reset. */
@@ -129,17 +135,6 @@ function getFormattedInput(inputValue) {
   }
   return formattedDateOfBirthInput;
 }
-
-const validationRules = {
-  "first-name-input": /^[^\s\d][a-zA-Z-]*$/,
-  "last-name-input": /^[^\s\d][a-zA-Z-]*$/,
-  "user-name-input": /^[a-zA-Z0-9-_]{3,30}$/,
-  // "date-of-birth-input": /^\d{2}-\d{2}-\d{4}$/,
-  // "email-address-input": /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
-  // "phone-number-input": /^(?:\(\d{3}\)|\d{3})[-\s]?\d{3}[-\s]?\d{4}$/,
-  // "password-input": /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-  // "confirm-password-input": /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-};
 
 function validateInput(input) {
   const regex = validationRules[input.id];
