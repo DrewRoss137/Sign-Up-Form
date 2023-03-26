@@ -15,19 +15,26 @@ const toggleConfirmPasswordButton = document.getElementById(
 const dateOfBirthFormat = "DD/MM/YYYY";
 
 const validationRules = {
-  "first-name-input": /^[^\s\d][a-zA-Z-]*$/,
-  "last-name-input": /^[^\s\d][a-zA-Z-]*$/,
+  "first-name-input": /^[a-zA-Z][a-zA-Z-]*$/,
+  "last-name-input": /^[a-zA-Z][a-zA-Z-]*$/,
   "user-name-input": /^[a-zA-Z0-9-_]{3,30}$/,
+  "date-of-birth-input": isValidDate,
+  "email-address-input": /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
 };
 
 let formattedDateOfBirthInput;
 let isFirstClick = true;
 
 textInputs.forEach((input) => {
-  input.addEventListener("input", () => validateInput(input));
+  input.addEventListener("blur", () => validateInput(input));
+  if (input !== dateOfBirthInput) {
+    input.addEventListener("input", () => {
+      validateInput(input);
+    });
+  }
 });
 
-/* If the user's input === "DD/MM/YYY", the isFirstClick flag is reset. */
+// If the user's input is empty, the isFirstClick flag is reset.
 dateOfBirthInput.addEventListener("blur", () => {
   if (dateOfBirthInput.value === dateOfBirthFormat) {
     dateOfBirthInput.value = "";
@@ -35,8 +42,8 @@ dateOfBirthInput.addEventListener("blur", () => {
   }
 });
 
-/* If isFirstClick, and the user's input === "DD/MM/YYY", cursor is placed at the beginning.
-If !isFirstClick, positions the cursor after the last entered character, or before the first placeholder. */
+// If isFirstClick, cursor is placed at the beginning.
+// If !isFirstClick, positions the cursor after the last entered character, or before the first placeholder.
 dateOfBirthInput.addEventListener("click", () => {
   if (
     isFirstClick &&
@@ -56,8 +63,8 @@ dateOfBirthInput.addEventListener("click", () => {
   }
 });
 
-/* Formats user's input using getFormattedInput function and sets the input value to the formatted value.
-Positions the cursor after the last entered character, or before the first placeholder. */
+// Formats user's input using getFormattedInput function and sets the input value to the formatted value.
+// Positions the cursor after the last entered character, or before the first placeholder.
 dateOfBirthInput.addEventListener("input", ({ target: { value } }) => {
   const formattedDateOfBirthInput = getFormattedInput(value);
   dateOfBirthInput.value = formattedDateOfBirthInput;
@@ -65,13 +72,18 @@ dateOfBirthInput.addEventListener("input", ({ target: { value } }) => {
   dateOfBirthInput.setSelectionRange(nextPosition, nextPosition);
 });
 
-/* "Ctrl + A", "Backspace" and "Delete" modifies the input value accordingly while preserving the date format and positions the cursor correctly.
-If the user presses any arrow key, it prevents the default behavior, avoiding unwanted cursor movement. */
+dateOfBirthInput.addEventListener("input", () =>
+  validateInput(dateOfBirthInput)
+);
+
+// "Ctrl + A", "Backspace" and "Delete" modifies the input value accordingly while preserving the date format and positions the cursor correctly.
+// If the user presses any arrow key, it prevents the default behavior, avoiding unwanted cursor movement.
 dateOfBirthInput.addEventListener("keydown", (event) => {
   if (event.ctrlKey && event.key === "a") {
     event.preventDefault();
     dateOfBirthInput.setSelectionRange(0, dateOfBirthInput.value.length);
   } else if (event.key === "Backspace" || event.key === "Delete") {
+    const isValidDateBefore = isValidDate(dateOfBirthInput.value);
     event.preventDefault();
     const currentValue = dateOfBirthInput.value;
     const selectionStart = dateOfBirthInput.selectionStart;
@@ -98,6 +110,9 @@ dateOfBirthInput.addEventListener("keydown", (event) => {
         selectionEnd
       )}${secondHalf}`;
       dateOfBirthInput.setSelectionRange(selectionStart, selectionStart);
+    }
+    if (isValidDateBefore !== isValidDate(dateOfBirthInput.value)) {
+      validateInput(dateOfBirthInput);
     }
   } else if (event.key.startsWith("Arrow")) {
     event.preventDefault();
@@ -137,9 +152,31 @@ function getFormattedInput(inputValue) {
 }
 
 function validateInput(input) {
-  const regex = validationRules[input.id];
-  if (!regex) return;
-  const isValid = regex.test(input.value);
+  const rule = validationRules[input.id];
+  if (!rule) return;
+  let isValid;
+  if (typeof rule === "function") {
+    isValid = rule(input.value);
+  } else {
+    isValid = rule.test(input.value);
+  }
   input.classList.remove("valid", "invalid");
   input.classList.add(isValid ? "valid" : "invalid");
+}
+
+function isValidDate(input) {
+  if (!/^\d\d\/\d\d\/\d\d\d\d$/.test(input)) {
+    return false;
+  }
+  const parts = input.split("/").map((p) => parseInt(p, 10));
+  parts[1] -= 1;
+  const d = new Date(parts[2], parts[1], parts[0]);
+  const isFullyEntered =
+    !input.includes("D") && !input.includes("M") && !input.includes("Y");
+  return (
+    isFullyEntered &&
+    d.getMonth() === parts[1] &&
+    d.getDate() === parts[0] &&
+    d.getFullYear() === parts[2]
+  );
 }
