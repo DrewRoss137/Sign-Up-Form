@@ -17,9 +17,10 @@ const dateOfBirthFormat = "DD/MM/YYYY";
 const validationRules = {
   "first-name-input": /^[a-zA-Z][a-zA-Z-]*$/,
   "last-name-input": /^[a-zA-Z][a-zA-Z-]*$/,
-  "user-name-input": /^[a-zA-Z0-9-_]{3,30}$/,
+  "user-name-input": /^[a-zA-Z]{3}[a-zA-Z0-9_-]*$/,
   "date-of-birth-input": isValidDate,
   "email-address-input": /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
+  "phone-number-input": /^\(?(\d{3})\)?[- ]?(\d{3})[- ]?(\d{4})$/,
 };
 
 let formattedDateOfBirthInput;
@@ -164,19 +165,22 @@ function validateInput(input) {
   input.classList.add(isValid ? "valid" : "invalid");
 }
 
-function isValidDate(input) {
-  if (!/^\d\d\/\d\d\/\d\d\d\d$/.test(input)) {
+function isValidDate(dateString) {
+  if (!/^\d\d\/\d\d\/\d\d\d\d$/.test(dateString)) {
     return false;
   }
-  const parts = input.split("/").map((p) => parseInt(p, 10));
-  parts[1] -= 1;
-  const d = new Date(parts[2], parts[1], parts[0]);
+  const dateElements = dateString.split("/").map((part) => parseInt(part, 10));
+  dateElements[1] -= 1;
+  const dateObj = new Date(dateElements[2], dateElements[0], dateElements[1]);
   const isFullyEntered =
-    !input.includes("D") && !input.includes("M") && !input.includes("Y");
+    !dateString.includes("D") &&
+    !dateString.includes("M") &&
+    !dateString.includes("Y");
   return (
     isFullyEntered &&
-    d.getMonth() === parts[1] &&
-    d.getDate() === parts[0] &&
-    d.getFullYear() === parts[2]
+    dateObj.getDate() === dateElements[1] &&
+    dateObj.getMonth() === dateElements[0] &&
+    dateObj.getFullYear() === dateElements[2] &&
+    dateObj.getFullYear() >= 1905
   );
 }
