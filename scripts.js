@@ -34,12 +34,9 @@ document.addEventListener("keydown", function (event) {
 });
 
 textInputs.forEach((input) => {
-  input.addEventListener("blur", () => validateInput(input));
-  if (input !== dateOfBirthInput) {
-    input.addEventListener("input", () => {
-      validateInput(input);
-    });
-  }
+  const eventHandler = (event) => handleEvent(event, input);
+  input.addEventListener("blur", eventHandler);
+  input.addEventListener("input", eventHandler);
 });
 
 // If the user's input is empty, the isFirstClick flag is reset.
@@ -134,6 +131,59 @@ togglePasswordButton.addEventListener("click", () => {
 toggleConfirmPasswordButton.addEventListener("click", () => {
   togglePasswordVisibility(confirmPasswordInput);
 });
+
+function handleEvent(event, input) {
+  if (event.type === "input" && input === dateOfBirthInput) return;
+  const isValid = validateInput(input);
+  if (!isValid && input.classList.contains("invalid")) {
+    displayError(input);
+  }
+}
+
+function displayErrorMessage(input) {
+  const existingError = input.parentNode.querySelector(".error-message");
+  if (existingError) {
+    existingError.remove();
+  }
+  const errorMessage = document.createElement("div");
+  errorMessage.classList.add("error-message");
+  errorMessage.textContent = `${input.placeholder} is required`;
+  const inputRect = input.getBoundingClientRect();
+  errorMessage.style.backgroundColor = "#ffe5e5";
+  errorMessage.style.border = "1px solid red";
+  errorMessage.style.borderRadius = "3px";
+  errorMessage.style.color = "red";
+  errorMessage.style.fontSize = "0.8em";
+  errorMessage.style.left = `${inputRect.left - inputRect.width + 100}px`;
+  errorMessage.style.opacity = "0";
+  errorMessage.style.padding = "5px";
+  errorMessage.style.position = "absolute";
+  errorMessage.style.top = `${inputRect.top + window.scrollY}px`;
+  errorMessage.style.transition = "opacity 0.5s";
+  errorMessage.style.zIndex = "10";
+  input.parentNode.insertBefore(errorMessage, input.nextSibling);
+  setTimeout(() => {
+    errorMessage.style.opacity = "1";
+  }, 10);
+
+  setTimeout(() => {
+    errorMessage.style.opacity = "0";
+    setTimeout(() => {
+      errorMessage.remove();
+    }, 500);
+  }, 3000);
+}
+
+function displayError(input) {
+  if (!input.hasErrorEventAttached) {
+    input.addEventListener("focusout", () => {
+      if (input.classList.contains("invalid")) {
+        displayErrorMessage(input);
+      }
+    });
+    input.hasErrorEventAttached = true;
+  }
+}
 
 // Finds the position of the last entered input value that is not "D", "M", or "Y".
 function findLastEnteredInputPosition(inputValue) {
