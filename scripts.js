@@ -26,6 +26,13 @@ const validationRules = {
 let formattedDateOfBirthInput;
 let isFirstClick = true;
 
+document.addEventListener("keydown", function (event) {
+  if (event.key === "Enter") {
+    event.preventDefault();
+    return false;
+  }
+});
+
 textInputs.forEach((input) => {
   input.addEventListener("blur", () => validateInput(input));
   if (input !== dateOfBirthInput) {
@@ -183,4 +190,12 @@ function isValidDate(dateString) {
     dateObj.getFullYear() === dateElements[2] &&
     dateObj.getFullYear() >= 1905
   );
+}
+
+function togglePasswordVisibility(inputElement) {
+  if (inputElement.type === "password") {
+    inputElement.type = "text";
+  } else {
+    inputElement.type = "password";
+  }
 }
