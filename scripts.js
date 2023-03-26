@@ -147,6 +147,7 @@ function displayErrorMessage(input, errorType) {
   }
   const errorMessage = document.createElement("div");
   errorMessage.classList.add("error-message");
+  errorMessage.id = "error-message";
   switch (errorType) {
     case "required":
       errorMessage.textContent = `${input.placeholder} is required`;
@@ -156,21 +157,11 @@ function displayErrorMessage(input, errorType) {
       break;
   }
   const inputRect = input.getBoundingClientRect();
-  errorMessage.style.backgroundColor = "#ffe5e5";
-  errorMessage.style.border = "1px solid red";
-  errorMessage.style.borderRadius = "3px";
-  errorMessage.style.color = "red";
-  errorMessage.style.fontSize = "0.8em";
-  errorMessage.style.opacity = "0";
-  errorMessage.style.padding = "5px";
-  errorMessage.style.position = "absolute";
   errorMessage.style.top = `${inputRect.top + window.scrollY}px`;
-  errorMessage.style.transition = "opacity 0.5s";
-  errorMessage.style.zIndex = "10";
   if (input.id === "first-name-input") {
-    errorMessage.style.left = `${inputRect.left - inputRect.width}px`;
+    errorMessage.style.left = `${inputRect.left - 195}px`;
   } else {
-    errorMessage.style.left = `${inputRect.right}px`;
+    errorMessage.style.left = `${inputRect.right + 20}px`;
   }
   input.parentNode.insertBefore(errorMessage, input.nextSibling);
   setTimeout(() => {
@@ -180,7 +171,7 @@ function displayErrorMessage(input, errorType) {
     errorMessage.style.opacity = "0";
     setTimeout(() => {
       errorMessage.remove();
-    }, 500);
+    }, 1000);
   }, 3000);
 }
 
