@@ -140,32 +140,42 @@ function handleEvent(event, input) {
   }
 }
 
-function displayErrorMessage(input) {
-  const existingError = input.parentNode.querySelector(".error-message");
-  if (existingError) {
+function displayErrorMessage(input, errorType) {
+  const existingError = input.nextElementSibling;
+  if (existingError && existingError.classList.contains("error-message")) {
     existingError.remove();
   }
   const errorMessage = document.createElement("div");
   errorMessage.classList.add("error-message");
-  errorMessage.textContent = `${input.placeholder} is required`;
+  switch (errorType) {
+    case "required":
+      errorMessage.textContent = `${input.placeholder} is required`;
+      break;
+    case "invalid":
+      errorMessage.textContent = `${input.placeholder} is invalid`;
+      break;
+  }
   const inputRect = input.getBoundingClientRect();
   errorMessage.style.backgroundColor = "#ffe5e5";
   errorMessage.style.border = "1px solid red";
   errorMessage.style.borderRadius = "3px";
   errorMessage.style.color = "red";
   errorMessage.style.fontSize = "0.8em";
-  errorMessage.style.left = `${inputRect.left - inputRect.width + 100}px`;
   errorMessage.style.opacity = "0";
   errorMessage.style.padding = "5px";
   errorMessage.style.position = "absolute";
   errorMessage.style.top = `${inputRect.top + window.scrollY}px`;
   errorMessage.style.transition = "opacity 0.5s";
   errorMessage.style.zIndex = "10";
+  if (input.id === "first-name-input") {
+    errorMessage.style.left = `${inputRect.left - inputRect.width}px`;
+  } else {
+    errorMessage.style.left = `${inputRect.right}px`;
+  }
   input.parentNode.insertBefore(errorMessage, input.nextSibling);
   setTimeout(() => {
     errorMessage.style.opacity = "1";
-  }, 10);
-
+  }, 0);
   setTimeout(() => {
     errorMessage.style.opacity = "0";
     setTimeout(() => {
@@ -178,7 +188,8 @@ function displayError(input) {
   if (!input.hasErrorEventAttached) {
     input.addEventListener("focusout", () => {
       if (input.classList.contains("invalid")) {
-        displayErrorMessage(input);
+        const errorType = input.value === "" ? "required" : "invalid";
+        displayErrorMessage(input, errorType);
       }
     });
     input.hasErrorEventAttached = true;
