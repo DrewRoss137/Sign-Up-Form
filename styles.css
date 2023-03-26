@@ -138,6 +138,7 @@ h1 {
 h1,
 input,
 input[type="text"]::placeholder,
+.error-message,
 select,
 option,
 .verification-method,
@@ -224,6 +225,29 @@ select:focus,
 button[type="submit"]:focus,
 input[type="password"]:focus {
   transform: scale(1.05);
+}
+
+.error-message {
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 1),
+    rgba(225, 225, 225, 1)
+  );
+  border-color: rgba(255, 0, 0, 1);
+  border-radius: 3px;
+  border-style: solid;
+  border-width: 2px;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
+  color: rgba(255, 0, 0, 1);
+  font-size: 14px;
+  height: 15px;
+  opacity: 0;
+  padding: 6px;
+  position: absolute;
+  text-align: center;
+  transition: opacity 1s;
+  width: 160px;
+  z-index: 10;
 }
 
 select {
