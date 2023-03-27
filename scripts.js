@@ -8,6 +8,7 @@ const userNameInput = document.getElementById("user-name-input");
 const dateOfBirthInput = document.getElementById("date-of-birth-input");
 const emailAddressInput = document.getElementById("email-address-input");
 const phoneNumberInput = document.getElementById("phone-number-input");
+const radioInputs = document.querySelectorAll("input[type='radio']");
 const passwordInput = document.getElementById("password-input");
 const passwordStrengthIndicator = document.getElementById(
   "password-strength-indicator"
@@ -51,7 +52,8 @@ form.addEventListener("submit", (event) => {
   const hasInvalidInput = [...textInputs].some((input) =>
     input.classList.contains("invalid")
   );
-  if (hasInvalidInput || hasEmptyInput) {
+  const hasUncheckedRadio = areRadiosUnchecked(radioInputs);
+  if (hasInvalidInput || hasEmptyInput || hasUncheckedRadio) {
     event.preventDefault();
     if (hasEmptyInput) {
       textInputs.forEach((input) => {
@@ -62,8 +64,39 @@ form.addEventListener("submit", (event) => {
         }
       });
     }
+    if (hasUncheckedRadio) {
+      const displayedErrors = new Set();
+      radioInputs.forEach((input) => {
+        if (!input.checked && !displayedErrors.has(input.name)) {
+          input.classList.add("invalid");
+          displayError(input);
+          displayErrorMessage(input, "required");
+          displayedErrors.add(input.name);
+        }
+      });
+    }
   }
 });
+
+function areRadiosUnchecked(radioInputs) {
+  const radioButtonGroups = {};
+  radioInputs.forEach((input) => {
+    const groupName = input.name;
+    if (!radioButtonGroups[groupName]) {
+      radioButtonGroups[groupName] = [];
+    }
+    radioButtonGroups[groupName].push(input);
+  });
+  for (const groupName in radioButtonGroups) {
+    const isChecked = radioButtonGroups[groupName].some(
+      (input) => input.checked
+    );
+    if (!isChecked) {
+      return true;
+    }
+  }
+  return false;
+}
 
 textInputs.forEach((input) => {
   const eventHandler = (event) => handleEvent(event, input);
@@ -210,16 +243,32 @@ function displayErrorMessage(input, errorType) {
   errorMessage.id = "error-message";
   switch (errorType) {
     case "required":
-      errorMessage.textContent = `${input.placeholder} is required`;
+      if (input.type === "radio") {
+        errorMessage.textContent = "Verification Method is required";
+      } else {
+        errorMessage.textContent = `${input.placeholder} is required`;
+      }
       break;
     case "invalid":
-      errorMessage.textContent = `${input.placeholder} is invalid`;
+      if (input.id === "password-input") {
+        errorMessage.textContent = "Password is too weak";
+      } else if (input.id === "confirm-password-input") {
+        errorMessage.textContent = "Passwords do not match";
+      } else {
+        errorMessage.textContent = `${input.placeholder} is invalid`;
+      }
       break;
   }
   const inputRect = input.getBoundingClientRect();
   errorMessage.style.top = `${inputRect.top + window.scrollY}px`;
   if (input.id === "first-name-input") {
     errorMessage.style.left = `${inputRect.left - 190}px`;
+  } else if (input.id === "password-input") {
+    errorMessage.style.top = `${inputRect.bottom - 625}px`;
+    errorMessage.style.left = `${inputRect.left + -1350}px`;
+  } else if (input.id === "confirm-password-input") {
+    errorMessage.style.top = `${inputRect.bottom - 685}px`;
+    errorMessage.style.left = `${inputRect.left + -1351}px`;
   } else {
     errorMessage.style.left = `${inputRect.right + 20}px`;
   }
@@ -282,6 +331,9 @@ function validateInput(input) {
   }
   input.classList.remove("valid", "invalid");
   input.classList.add(isValid ? "valid" : "invalid");
+  if (!isValid) {
+    displayError(input);
+  }
 }
 
 function isValidDate(dateString) {
