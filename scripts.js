@@ -1,20 +1,21 @@
 const form = document.getElementById("form");
-const textInputs = document.querySelectorAll("input[type='text']");
+const textInputs = document.querySelectorAll(
+  "input[type='text'], input[type='password']"
+);
 const firstNameInput = document.getElementById("first-name-input");
 const lastNameInput = document.getElementById("last-name-input");
 const userNameInput = document.getElementById("user-name-input");
 const dateOfBirthInput = document.getElementById("date-of-birth-input");
 const emailAddressInput = document.getElementById("email-address-input");
 const phoneNumberInput = document.getElementById("phone-number-input");
-const password = document.getElementById("password");
 const passwordInput = document.getElementById("password-input");
+const passwordStrengthIndicator = document.getElementById(
+  "password-strength-indicator"
+);
 const togglePasswordButton = document.getElementById("toggle-password");
 const confirmPasswordInput = document.getElementById("confirm-password-input");
 const toggleConfirmPasswordButton = document.getElementById(
   "toggle-confirm-password"
-);
-const passwordStrengthIndicator = document.getElementById(
-  "password-strength-indicator"
 );
 
 const dateOfBirthFormat = "DD/MM/YYYY";
@@ -26,7 +27,15 @@ const validationRules = {
   "date-of-birth-input": isValidDate,
   "email-address-input": /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
   "phone-number-input": /^\(?(\d{3})\)?[- ]?(\d{3})[- ]?(\d{4})(?:[- ]?\d)?$/,
+  "password-input": function (value) {
+    const strength = calculatePasswordStrength(value);
+    return strength === 4;
+  },
+  "confirm-password-input": function (value) {
+    return value === passwordInput.value;
+  },
 };
+
 let formattedDateOfBirthInput;
 let isFirstClick = true;
 
@@ -37,24 +46,29 @@ document.addEventListener("keydown", function (event) {
   }
 });
 
+form.addEventListener("submit", (event) => {
+  const hasEmptyInput = [...textInputs].some((input) => input.value === "");
+  const hasInvalidInput = [...textInputs].some((input) =>
+    input.classList.contains("invalid")
+  );
+  if (hasInvalidInput || hasEmptyInput) {
+    event.preventDefault();
+    if (hasEmptyInput) {
+      textInputs.forEach((input) => {
+        if (input.value === "") {
+          input.classList.add("invalid");
+          displayError(input);
+          displayErrorMessage(input, "required");
+        }
+      });
+    }
+  }
+});
+
 textInputs.forEach((input) => {
   const eventHandler = (event) => handleEvent(event, input);
   input.addEventListener("blur", eventHandler);
   input.addEventListener("input", eventHandler);
-});
-
-passwordInput.addEventListener("focusin", () => {
-  const indicator = document.getElementById("password-strength-indicator");
-  if (!indicator) {
-    createPasswordStrengthIndicator(passwordInput);
-  }
-});
-
-passwordInput.addEventListener("focusout", () => {
-  const indicator = document.getElementById("password-strength-indicator");
-  if (indicator) {
-    indicator.remove();
-  }
 });
 
 // If the user's input is empty, the isFirstClick flag is reset.
@@ -142,6 +156,34 @@ dateOfBirthInput.addEventListener("keydown", (event) => {
   }
 });
 
+passwordInput.addEventListener("focusin", () => {
+  if (passwordStrengthIndicator) {
+    passwordStrengthIndicator.classList.add("active");
+  }
+});
+
+passwordInput.addEventListener("focusout", () => {
+  if (passwordStrengthIndicator) {
+    passwordStrengthIndicator.classList.remove("active");
+  }
+});
+
+passwordInput.addEventListener("input", () => {
+  if (passwordStrengthIndicator) {
+    const strength = calculatePasswordStrength(passwordInput.value);
+    const passwordStrengthIndicatorBars =
+      passwordStrengthIndicator.querySelectorAll(
+        ".password-strength-indicator-bar"
+      );
+    passwordStrengthIndicatorBars.forEach((bar, index) => {
+      bar.className = "password-strength-indicator-bar";
+      if (index < strength) {
+        bar.classList.add(`strength-${index}`);
+      }
+    });
+  }
+});
+
 togglePasswordButton.addEventListener("click", () => {
   togglePasswordVisibility(passwordInput);
 });
@@ -177,7 +219,7 @@ function displayErrorMessage(input, errorType) {
   const inputRect = input.getBoundingClientRect();
   errorMessage.style.top = `${inputRect.top + window.scrollY}px`;
   if (input.id === "first-name-input") {
-    errorMessage.style.left = `${inputRect.left - 195}px`;
+    errorMessage.style.left = `${inputRect.left - 190}px`;
   } else {
     errorMessage.style.left = `${inputRect.right + 20}px`;
   }
@@ -262,22 +304,32 @@ function isValidDate(dateString) {
   );
 }
 
+function calculatePasswordStrength(password) {
+  let passwordStrength = 0;
+  const hasLowerCase = /[a-z]/.test(password);
+  const hasUpperCase = /[A-Z]/.test(password);
+  const hasNumber = /\d/.test(password);
+  const hasSpecialChar = /[\W_]/.test(password);
+  const hasValidLength = password.length >= 12;
+  if (hasLowerCase || hasUpperCase) {
+    passwordStrength++;
+  }
+  if (hasLowerCase && hasUpperCase) {
+    passwordStrength++;
+  }
+  if (hasNumber && hasSpecialChar) {
+    passwordStrength++;
+  }
+  if (hasValidLength) {
+    passwordStrength++;
+  }
+  return passwordStrength;
+}
+
 function togglePasswordVisibility(inputElement) {
   if (inputElement.type === "password") {
     inputElement.type = "text";
   } else {
     inputElement.type = "password";
   }
-}
-
-function createPasswordStrengthIndicator(passwordInput) {
-  const indicator = document.createElement("div");
-  indicator.classList.add("password-strength-indicator");
-  indicator.id = "password-strength-indicator";
-  for (let i = 0; i < 3; i++) {
-    const indicatorBar = document.createElement("div");
-    indicatorBar.classList.add("password-strength-indicator-bar");
-    indicator.appendChild(indicatorBar);
-  }
-  form.insertBefore(indicator, password.nextSibling);
 }
