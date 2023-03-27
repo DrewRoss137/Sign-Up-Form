@@ -1,3 +1,4 @@
+const form = document.getElementById("form");
 const textInputs = document.querySelectorAll("input[type='text']");
 const firstNameInput = document.getElementById("first-name-input");
 const lastNameInput = document.getElementById("last-name-input");
@@ -5,11 +6,15 @@ const userNameInput = document.getElementById("user-name-input");
 const dateOfBirthInput = document.getElementById("date-of-birth-input");
 const emailAddressInput = document.getElementById("email-address-input");
 const phoneNumberInput = document.getElementById("phone-number-input");
+const password = document.getElementById("password");
 const passwordInput = document.getElementById("password-input");
 const togglePasswordButton = document.getElementById("toggle-password");
 const confirmPasswordInput = document.getElementById("confirm-password-input");
 const toggleConfirmPasswordButton = document.getElementById(
   "toggle-confirm-password"
+);
+const passwordStrengthIndicator = document.getElementById(
+  "password-strength-indicator"
 );
 
 const dateOfBirthFormat = "DD/MM/YYYY";
@@ -20,9 +25,8 @@ const validationRules = {
   "user-name-input": /^[a-zA-Z]{3}[a-zA-Z0-9_-]*$/,
   "date-of-birth-input": isValidDate,
   "email-address-input": /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
-  "phone-number-input": /^\(?(\d{3})\)?[- ]?(\d{3})[- ]?(\d{4})$/,
+  "phone-number-input": /^\(?(\d{3})\)?[- ]?(\d{3})[- ]?(\d{4})(?:[- ]?\d)?$/,
 };
-
 let formattedDateOfBirthInput;
 let isFirstClick = true;
 
@@ -37,6 +41,20 @@ textInputs.forEach((input) => {
   const eventHandler = (event) => handleEvent(event, input);
   input.addEventListener("blur", eventHandler);
   input.addEventListener("input", eventHandler);
+});
+
+passwordInput.addEventListener("focusin", () => {
+  const indicator = document.getElementById("password-strength-indicator");
+  if (!indicator) {
+    createPasswordStrengthIndicator(passwordInput);
+  }
+});
+
+passwordInput.addEventListener("focusout", () => {
+  const indicator = document.getElementById("password-strength-indicator");
+  if (indicator) {
+    indicator.remove();
+  }
 });
 
 // If the user's input is empty, the isFirstClick flag is reset.
@@ -250,4 +268,16 @@ function togglePasswordVisibility(inputElement) {
   } else {
     inputElement.type = "password";
   }
+}
+
+function createPasswordStrengthIndicator(passwordInput) {
+  const indicator = document.createElement("div");
+  indicator.classList.add("password-strength-indicator");
+  indicator.id = "password-strength-indicator";
+  for (let i = 0; i < 3; i++) {
+    const indicatorBar = document.createElement("div");
+    indicatorBar.classList.add("password-strength-indicator-bar");
+    indicator.appendChild(indicatorBar);
+  }
+  form.insertBefore(indicator, password.nextSibling);
 }
