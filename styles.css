@@ -193,11 +193,13 @@ button[type="submit"] {
   transition: border-color 1s ease, all 1s ease-in-out;
 }
 
-input[type="text"].invalid {
+input[type="text"].invalid,
+input[type="password"].invalid {
   border-bottom-color: rgba(255, 0, 0, 1);
 }
 
-input[type="text"].valid {
+input[type="text"].valid,
+input[type="password"].valid {
   border-bottom-color: rgba(0, 255, 0, 1);
 }
 
@@ -245,13 +247,18 @@ input[type="password"]:focus {
   color: rgba(255, 0, 0, 1);
   font-size: 14px;
   height: 35px;
-  opacity: 0;
   padding: 2px;
   position: absolute;
   text-align: center;
-  transition: opacity 1s;
   width: 160px;
   z-index: 10;
+}
+
+.error-message,
+.password-strength-indicator,
+.password-strength-indicator-bar {
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
 }
 
 select {
@@ -365,40 +372,53 @@ button[type="button"] {
 .password-strength-indicator {
   flex-direction: row;
   gap: 3px;
+  opacity: 0;
+}
+
+.password-strength-indicator.active,
+.password-strength-indicator-bar.strength-0,
+.password-strength-indicator-bar.strength-1,
+.password-strength-indicator-bar.strength-2,
+.password-strength-indicator-bar.strength-3 {
+  opacity: 1;
 }
 
 .password-strength-indicator-bar {
-  background-image: radial-gradient(
-    circle at center,
-    rgb(255, 255, 255),
-    rgba(225, 225, 225, 1)
-  );
   border-radius: 100px;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 1);
   height: 10px;
   width: 86.69px;
 }
 
-.password-strength-indicator-bar-weak {
+.password-strength-indicator-bar.strength-0 {
   background-image: radial-gradient(
     circle at center,
-    rgba(255, 130, 130, 1),
-    rgb(250, 110, 110)
+    rgba(255, 140, 140, 1),
+    rgba(255, 130, 130, 1)
   );
 }
 
-.password-strength-indicator-bar-fair {
+.password-strength-indicator-bar.strength-1 {
   background-image: radial-gradient(
     circle at center,
-    rgba(255, 206, 160, 1),
-    rgba(255, 190, 130, 1)
+    rgba(255, 190, 140, 1),
+    rgba(255, 180, 140, 1)
   );
 }
 
-.password-strength-indicator-bar-strong {
+.password-strength-indicator-bar.strength-2 {
   background-image: radial-gradient(
     circle at center,
-    rgba(170, 255, 170, 1),
-    rgb(145, 255, 145)
+    rgba(255, 255, 190, 1),
+    rgba(255, 255, 180, 1)
+  );
+}
+
+.password-strength-indicator-bar.strength-3 {
+  background-image: radial-gradient(
+    circle at center,
+    rgba(190, 255, 190, 1),
+    rgba(180, 255, 180, 1)
   );
 }
 
