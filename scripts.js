@@ -78,26 +78,6 @@ form.addEventListener("submit", (event) => {
   }
 });
 
-function areRadiosUnchecked(radioInputs) {
-  const radioButtonGroups = {};
-  radioInputs.forEach((input) => {
-    const groupName = input.name;
-    if (!radioButtonGroups[groupName]) {
-      radioButtonGroups[groupName] = [];
-    }
-    radioButtonGroups[groupName].push(input);
-  });
-  for (const groupName in radioButtonGroups) {
-    const isChecked = radioButtonGroups[groupName].some(
-      (input) => input.checked
-    );
-    if (!isChecked) {
-      return true;
-    }
-  }
-  return false;
-}
-
 textInputs.forEach((input) => {
   const eventHandler = (event) => handleEvent(event, input);
   input.addEventListener("blur", eventHandler);
@@ -225,77 +205,6 @@ toggleConfirmPasswordButton.addEventListener("click", () => {
   togglePasswordVisibility(confirmPasswordInput);
 });
 
-function handleEvent(event, input) {
-  if (event.type === "input" && input === dateOfBirthInput) return;
-  const isValid = validateInput(input);
-  if (!isValid && input.classList.contains("invalid")) {
-    displayError(input);
-  }
-}
-
-function displayErrorMessage(input, errorType) {
-  const existingError = input.nextElementSibling;
-  if (existingError && existingError.classList.contains("error-message")) {
-    existingError.remove();
-  }
-  const errorMessage = document.createElement("div");
-  errorMessage.classList.add("error-message");
-  errorMessage.id = "error-message";
-  switch (errorType) {
-    case "required":
-      if (input.type === "radio") {
-        errorMessage.textContent = "Verification Method is required";
-      } else {
-        errorMessage.textContent = `${input.placeholder} is required`;
-      }
-      break;
-    case "invalid":
-      if (input.id === "password-input") {
-        errorMessage.textContent = "Password is too weak";
-      } else if (input.id === "confirm-password-input") {
-        errorMessage.textContent = "Passwords do not match";
-      } else {
-        errorMessage.textContent = `${input.placeholder} is invalid`;
-      }
-      break;
-  }
-  const inputRect = input.getBoundingClientRect();
-  errorMessage.style.top = `${inputRect.top + window.scrollY}px`;
-  if (input.id === "first-name-input") {
-    errorMessage.style.left = `${inputRect.left - 190}px`;
-  } else if (input.id === "password-input") {
-    errorMessage.style.top = `${inputRect.bottom - 625}px`;
-    errorMessage.style.left = `${inputRect.left + -1350}px`;
-  } else if (input.id === "confirm-password-input") {
-    errorMessage.style.top = `${inputRect.bottom - 685}px`;
-    errorMessage.style.left = `${inputRect.left + -1351}px`;
-  } else {
-    errorMessage.style.left = `${inputRect.right + 20}px`;
-  }
-  input.parentNode.insertBefore(errorMessage, input.nextSibling);
-  setTimeout(() => {
-    errorMessage.style.opacity = "1";
-  }, 0);
-  setTimeout(() => {
-    errorMessage.style.opacity = "0";
-    setTimeout(() => {
-      errorMessage.remove();
-    }, 1000);
-  }, 3000);
-}
-
-function displayError(input) {
-  if (!input.hasErrorEventAttached) {
-    input.addEventListener("focusout", () => {
-      if (input.classList.contains("invalid")) {
-        const errorType = input.value === "" ? "required" : "invalid";
-        displayErrorMessage(input, errorType);
-      }
-    });
-    input.hasErrorEventAttached = true;
-  }
-}
-
 // Finds the position of the last entered input value that is not "D", "M", or "Y".
 function findLastEnteredInputPosition(inputValue) {
   let position = inputValue.length - 1;
@@ -318,6 +227,14 @@ function getFormattedInput(inputValue) {
     }
   }
   return formattedDateOfBirthInput;
+}
+
+function handleEvent(event, input) {
+  if (event.type === "input" && input === dateOfBirthInput) return;
+  const isValid = validateInput(input);
+  if (!isValid && input.classList.contains("invalid")) {
+    displayError(input);
+  }
 }
 
 function validateInput(input) {
@@ -383,5 +300,88 @@ function togglePasswordVisibility(inputElement) {
     inputElement.type = "text";
   } else {
     inputElement.type = "password";
+  }
+}
+
+function areRadiosUnchecked(radioInputs) {
+  const radioButtonGroups = {};
+  radioInputs.forEach((input) => {
+    const groupName = input.name;
+    if (!radioButtonGroups[groupName]) {
+      radioButtonGroups[groupName] = [];
+    }
+    radioButtonGroups[groupName].push(input);
+  });
+  for (const groupName in radioButtonGroups) {
+    const isChecked = radioButtonGroups[groupName].some(
+      (input) => input.checked
+    );
+    if (!isChecked) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function displayErrorMessage(input, errorType) {
+  const existingError = input.nextElementSibling;
+  if (existingError && existingError.classList.contains("error-message")) {
+    existingError.remove();
+  }
+  const errorMessage = document.createElement("div");
+  errorMessage.classList.add("error-message");
+  errorMessage.id = "error-message";
+  switch (errorType) {
+    case "required":
+      if (input.type === "radio") {
+        errorMessage.textContent = "Verification Method is required";
+      } else {
+        errorMessage.textContent = `${input.placeholder} is required`;
+      }
+      break;
+    case "invalid":
+      if (input.id === "password-input") {
+        errorMessage.textContent = "Password is too weak";
+      } else if (input.id === "confirm-password-input") {
+        errorMessage.textContent = "Passwords do not match";
+      } else {
+        errorMessage.textContent = `${input.placeholder} is invalid`;
+      }
+      break;
+  }
+  const inputRect = input.getBoundingClientRect();
+  errorMessage.style.top = `${inputRect.top + window.scrollY}px`;
+  if (input.id === "first-name-input") {
+    errorMessage.style.left = `${inputRect.left - 190}px`;
+  } else if (input.id === "password-input") {
+    errorMessage.style.top = `${inputRect.bottom - 595}px`;
+    errorMessage.style.left = `${inputRect.left + -910}px`;
+  } else if (input.id === "confirm-password-input") {
+    errorMessage.style.top = `${inputRect.bottom - 658}px`;
+    errorMessage.style.left = `${inputRect.left + -910}px`;
+  } else {
+    errorMessage.style.left = `${inputRect.right + 20}px`;
+  }
+  input.parentNode.insertBefore(errorMessage, input.nextSibling);
+  setTimeout(() => {
+    errorMessage.style.opacity = "1";
+  }, 0);
+  setTimeout(() => {
+    errorMessage.style.opacity = "0";
+    setTimeout(() => {
+      errorMessage.remove();
+    }, 1000);
+  }, 3000);
+}
+
+function displayError(input) {
+  if (!input.hasErrorEventAttached) {
+    input.addEventListener("focusout", () => {
+      if (input.classList.contains("invalid")) {
+        const errorType = input.value === "" ? "required" : "invalid";
+        displayErrorMessage(input, errorType);
+      }
+    });
+    input.hasErrorEventAttached = true;
   }
 }
