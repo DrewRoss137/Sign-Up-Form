@@ -10,10 +10,10 @@ const emailAddressInput = document.getElementById("email-address-input");
 const phoneNumberInput = document.getElementById("phone-number-input");
 const radioInputs = document.querySelectorAll("input[type='radio']");
 const passwordInput = document.getElementById("password-input");
+const togglePasswordButton = document.getElementById("toggle-password");
 const passwordStrengthIndicator = document.getElementById(
   "password-strength-indicator"
 );
-const togglePasswordButton = document.getElementById("toggle-password");
 const confirmPasswordInput = document.getElementById("confirm-password-input");
 const toggleConfirmPasswordButton = document.getElementById(
   "toggle-confirm-password"
