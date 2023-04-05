@@ -449,11 +449,11 @@ footer {
 
 #github-logo {
   filter: invert(0%);
-  height: 24.5px;
+  height: 24px;
   opacity: 6%;
   padding-bottom: 6px;
   padding-left: 0px;
   padding-right: 6px;
   padding-top: 0px;
-  width: 24px;
+  width: 24.5px;
 }
